@@ -135,7 +135,7 @@
             let expression = inputField.value;
 
             try {
-                let response = await fetch('/calculate', {
+                let response = await fetch('https://your-backend-url/render/calculate', {  // Replace with your Render URL
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
