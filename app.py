@@ -10,6 +10,7 @@ class ScientificCalculator:
 
     def evaluate_expression(self, expression):
         try:
+            # Use restricted eval with safe math functions
             result = eval(expression, {"__builtins__": None}, {
                 'sqrt': math.sqrt,
                 'pow': math.pow,
@@ -36,6 +37,7 @@ def index():
 @app.route('/calculate', methods=['POST'])
 def calculate():
     try:
+        # Parse the incoming JSON request
         data = request.get_json()
         if 'expression' not in data:
             return jsonify({"error": "Missing expression parameter"}), 400
@@ -43,14 +45,18 @@ def calculate():
         calc = ScientificCalculator()
         expression = data['expression']
 
+        # Ensure only valid characters are included in the expression
         allowed_chars = "0123456789+-*/().^sincosradtanlogsqrtfactorialpie"
         if any(c not in allowed_chars for c in expression.replace(' ', '')):
             return jsonify({"error": "Invalid characters in expression"}), 400
 
+        # Evaluate the expression
         result = calc.evaluate_expression(expression)
 
+        # Handle errors in the expression evaluation
         if isinstance(result, str):
             return jsonify({"error": result}), 400
+
         return jsonify({"result": result})
 
     except Exception as e:
